@@ -87,6 +87,11 @@ bool FindType(const Graph* graph, const Node* node, bool* signed_input,
     *range_given = true;
     *input_min = 0;
     *input_max = 6;
+  } else if (src_op == "Relu1") {
+     *signed_input = false;
+     *range_given = true;
+     *input_min = 0;
+     *input_max = 1;
   } else if (src_op == "Sigmoid") {
     *signed_input = false;
     *range_given = true;

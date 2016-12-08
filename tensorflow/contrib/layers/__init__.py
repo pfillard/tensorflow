@@ -37,7 +37,7 @@ common machine learning algorithms.
 @@unit_norm
 
 Aliases for fully_connected which set a default activation function are
-available: `relu`, `relu6` and `linear`.
+available: `relu`, `relu6`, `relu1` and `linear`.
 
 ## Regularizers
 

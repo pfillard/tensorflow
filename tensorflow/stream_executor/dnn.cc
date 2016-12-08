@@ -60,6 +60,8 @@ string ActivationModeString(ActivationMode mode) {
       return "relu";
     case ActivationMode::kRelu6:
       return "relu6";
+    case ActivationMode::kRelu1:
+        return "relu1";
     case ActivationMode::kReluX:
       return "reluX";
     case ActivationMode::kTanh:

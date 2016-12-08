@@ -105,7 +105,7 @@ def summarize_activation(op):
   Returns:
     The summary op created to summarize `op`.
   """
-  if op.op.type in ('Relu', 'Softplus', 'Relu6'):
+  if op.op.type in ('Relu', 'Softplus', 'Relu6', 'Relu1'):
     # Using inputs to avoid floating point equality and/or epsilons.
     _add_scalar_summary(
         standard_ops.reduce_mean(standard_ops.to_float(standard_ops.less(
@@ -115,6 +115,11 @@ def summarize_activation(op):
     _add_scalar_summary(
         standard_ops.reduce_mean(standard_ops.to_float(standard_ops.greater(
             op.op.inputs[0], standard_ops.cast(6.0, op.op.inputs[0].dtype)))),
+        '%s/sixes' % op.op.name)
+  elif op.op.type == 'Relu1':
+    _add_scalar_summary(
+        standard_ops.reduce_mean(standard_ops.to_float(standard_ops.greater(
+            op.op.inputs[0], standard_ops.cast(1.0, op.op.inputs[0].dtype)))),
         '%s/sixes' % op.op.name)
   return _add_histogram_summary(op, '%s/activation' % op.op.name)
 

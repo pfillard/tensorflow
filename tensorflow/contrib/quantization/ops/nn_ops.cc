@@ -240,6 +240,35 @@ max_activations: The float value that the highest quantized value represents.
 
 )doc");
 
+REGISTER_OP("QuantizedRelu1")
+    .Input("features: Tinput")
+    .Input("min_features: float")
+    .Input("max_features: float")
+    .Output("activations: out_type")
+    .Output("min_activations: float")
+    .Output("max_activations: float")
+    .Attr("Tinput: quantizedtype")
+    .Attr("out_type: quantizedtype = DT_QUINT8")
+    .SetShapeFn([](InferenceContext* c) {
+      TF_RETURN_IF_ERROR(shape_inference::UnchangedShape(c));
+      ShapeHandle unused;
+      TF_RETURN_IF_ERROR(c->WithRank(c->input(1), 0, &unused));
+      TF_RETURN_IF_ERROR(c->WithRank(c->input(2), 0, &unused));
+      c->set_output(1, c->Scalar());
+      c->set_output(2, c->Scalar());
+      return Status::OK();
+    })
+    .Doc(R"doc(
+Computes Quantized Rectified Linear 1: `min(max(features, 0), 1)`
+
+activations: Has the same output shape as "features".
+min_features: The float value that the lowest quantized value represents.
+max_features: The float value that the highest quantized value represents.
+min_activations: The float value that the lowest quantized value represents.
+max_activations: The float value that the highest quantized value represents.
+
+)doc");
+
 REGISTER_OP("QuantizedReluX")
     .Input("features: Tinput")
     .Input("max_value: float")

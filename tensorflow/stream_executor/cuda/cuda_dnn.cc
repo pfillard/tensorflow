@@ -732,6 +732,10 @@ class ScopedActivationDescriptor {
         relu_ceiling = 6.0;
         mode = CUDNN_ACTIVATION_CLIPPED_RELU;
         break;
+      case dnn::ActivationMode::kRelu1:
+          relu_ceiling = 1.0;
+          mode = CUDNN_ACTIVATION_CLIPPED_RELU;
+          break;
       case dnn::ActivationMode::kReluX:
         relu_ceiling = value_max;
         mode = CUDNN_ACTIVATION_CLIPPED_RELU;
@@ -2998,6 +3002,11 @@ bool CudnnSupport::DoActivate(Stream* stream,
       LOG(WARNING) << "user requested Relu6, but providing Relu instead";
       mode = CUDNN_ACTIVATION_RELU;
       break;
+    case dnn::ActivationMode::kRelu1:
+        // TODO(leary) should probably do a post-pass to clip at 1?
+        LOG(WARNING) << "user requested Relu1, but providing Relu instead";
+        mode = CUDNN_ACTIVATION_RELU;
+        break;
     case dnn::ActivationMode::kReluX:
       // TODO(broune) should probably do a post-pass to clip at X?
       LOG(WARNING) << "user requested ReluX, but providing Relu instead";

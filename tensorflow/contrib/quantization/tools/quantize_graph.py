@@ -465,7 +465,7 @@ class GraphRewriter(object):
     elif current_node.op == "MaxPool" or current_node.op == "AvgPool":
       self.eightbitize_single_input_tensor_node(current_node,
                                                 self.add_pool_function)
-    elif current_node.op == "Relu" or current_node.op == "Relu6":
+    elif current_node.op == "Relu" or current_node.op == "Relu6" or current_node.op == "Relu1":
       self.eightbitize_single_input_tensor_node(current_node,
                                                 self.add_relu_function)
     elif current_node.op == "Concat":

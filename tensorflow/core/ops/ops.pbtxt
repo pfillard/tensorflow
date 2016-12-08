@@ -12044,6 +12044,71 @@ op {
   summary: "Computes rectified linear 6 gradients for a Relu6 operation."
 }
 op {
+  name: "Relu1"
+  input_arg {
+    name: "features"
+    type_attr: "T"
+  }
+  output_arg {
+    name: "activations"
+    type_attr: "T"
+  }
+  attr {
+    name: "T"
+    type: "type"
+    allowed_values {
+      list {
+        type: DT_FLOAT
+        type: DT_DOUBLE
+        type: DT_INT32
+        type: DT_INT64
+        type: DT_UINT8
+        type: DT_INT16
+        type: DT_INT8
+        type: DT_UINT16
+        type: DT_HALF
+      }
+    }
+  }
+  summary: "Computes rectified linear 1: `min(max(features, 0), 1)`."
+}
+op {
+  name: "Relu1Grad"
+  input_arg {
+    name: "gradients"
+    description: "The backpropagated gradients to the corresponding Relu1 operation."
+    type_attr: "T"
+  }
+  input_arg {
+    name: "features"
+    description: "The features passed as input to the corresponding Relu1 operation."
+    type_attr: "T"
+  }
+  output_arg {
+    name: "backprops"
+    description: "The gradients:\n`gradients * features * (features > 0) * (features < 1)`."
+    type_attr: "T"
+  }
+  attr {
+    name: "T"
+    type: "type"
+    allowed_values {
+      list {
+        type: DT_FLOAT
+        type: DT_DOUBLE
+        type: DT_INT32
+        type: DT_INT64
+        type: DT_UINT8
+        type: DT_INT16
+        type: DT_INT8
+        type: DT_UINT16
+        type: DT_HALF
+      }
+    }
+  }
+  summary: "Computes rectified linear 1 gradients for a Relu1 operation."
+}
+op {
   name: "ReluGrad"
   input_arg {
     name: "gradients"

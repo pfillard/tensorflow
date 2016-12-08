@@ -1259,6 +1259,30 @@ backprops: The gradients:
   `gradients * features * (features > 0) * (features < 6)`.
 )doc");
 
+REGISTER_OP("Relu1")
+.Input("features: T")
+.Output("activations: T")
+.Attr("T: realnumbertype")
+.SetShapeFn(shape_inference::UnchangedShape)
+.Doc(R"doc(
+Computes rectified linear 1: `min(max(features, 0), 1)`.
+)doc");
+
+REGISTER_OP("Relu1Grad")
+.Input("gradients: T")
+.Input("features: T")
+.Output("backprops: T")
+.Attr("T: realnumbertype")
+.SetShapeFn(shape_inference::MergeBothInputsShapeFn)
+.Doc(R"doc(
+Computes rectified linear 1 gradients for a Relu1 operation.
+
+gradients: The backpropagated gradients to the corresponding Relu1 operation.
+features: The features passed as input to the corresponding Relu1 operation.
+backprops: The gradients:
+  `gradients * features * (features > 0) * (features < 1)`.
+)doc");
+
 REGISTER_OP("Elu")
     .Input("features: T")
     .Output("activations: T")

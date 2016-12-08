@@ -92,6 +92,41 @@ struct Relu6Grad {
   }
 };
 
+// Functor used by Relu1Op to do the computations.
+template <typename Device, typename T>
+struct Relu1 {
+    // Computes Relu1 activation.
+    //
+    // features: any shape.
+    // activations: same shape as "features".
+    void operator()(const Device& d, typename TTypes<T>::ConstTensor features,
+        typename TTypes<T>::Tensor activations) {
+        activations.device(d) =
+            features.cwiseMax(static_cast<T>(0)).cwiseMin(static_cast<T>(1));
+    }
+};
+
+// Functor used by Relu1GradOp to do the computations.
+template <typename Device, typename T>
+struct Relu1Grad {
+    // Computes Relu1Grad backprops.
+    //
+    // gradients: gradients backpropagated to the Relu1 op.
+    // features: inputs that where passed to the Relu1 op.
+    // backprops: gradients to backpropagate to the Relu1 inputs.
+    void operator()(const Device& d, typename TTypes<T>::ConstTensor gradients,
+        typename TTypes<T>::ConstTensor features,
+        typename TTypes<T>::Tensor backprops) {
+        // NOTE: When the activation is exactly zero or one, we
+        // arbitrarily choose to not propagate the associated gradient
+        // value.
+        backprops.device(d) = gradients *
+            ((features > features.constant(static_cast<T>(0))) *
+            (features < features.constant(static_cast<T>(1))))
+            .template cast<T>();
+    }
+};
+
 // Functor used by EluOp to do the computations.
 template <typename Device, typename T>
 struct Elu {

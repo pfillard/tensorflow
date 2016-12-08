@@ -758,6 +758,8 @@ enum class ActivationMode {
   kRelu,
   // Rectified linear activation, where upper maximum is 6.0.
   kRelu6,
+  // Rectified linear activation, where upper maximum is 1.0.
+  kRelu1,
   // Rectified linear activation, where upper maximum specified by
   // BatchDescriptor::value_max().
   kReluX,
