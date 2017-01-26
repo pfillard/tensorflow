@@ -181,7 +181,7 @@ def all_libraries(module_to_name, members, documented):
                                "conv2d_backprop_filter", "avg_pool_grad",
                                "max_pool_grad", "max_pool_grad_with_argmax",
                                "batch_norm_with_global_normalization_grad",
-                               "lrn_grad", "relu6_grad", "softplus_grad",
+                               "lrn_grad", "relu6_grad", "relu1_grad", "softplus_grad",
                                "softsign_grad", "xw_plus_b", "relu_layer",
                                "lrn", "batch_norm_with_global_normalization",
                                "batch_norm_with_global_normalization_grad",
@@ -261,7 +261,7 @@ _hidden_symbols = ["Event", "LogMessage", "Summary", "SessionLog", "xrange",
 # TODO(wicke): Remove contrib.layers.relu* after shortnames are
 # disabled.  These conflict with tf.nn.relu*
 EXCLUDE = frozenset(["tf.contrib.learn.monitors.NanLossDuringTrainingError",
-                     "tf.contrib.layers.relu", "tf.contrib.layers.relu6",
+                     "tf.contrib.layers.relu", "tf.contrib.layers.relu6", "tf.contrib.layers.relu1",
                      "tf.contrib.framework.assert_global_step",
                      "tf.contrib.framework.get_global_step",
                      "tf.contrib.learn.NanLossDuringTrainingError",
