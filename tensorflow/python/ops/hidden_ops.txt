@@ -279,6 +279,7 @@ MaxPool3DGrad
 MaxPool3DGradGrad
 ReluGrad
 Relu6Grad
+Relu1Grad
 EluGrad
 SoftplusGrad
 SoftsignGrad
@@ -287,6 +288,7 @@ TopKV2
 BiasAdd
 BiasAddV1
 Relu6
+Relu1
 AvgPool
 MaxPool
 Softmax
