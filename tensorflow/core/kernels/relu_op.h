@@ -109,6 +109,18 @@ class Relu6GradOp : public BinaryElementWiseOp<T, Relu6GradOp<Device, T>> {
   void OperateNoTemplate(OpKernelContext* context, const Tensor& g,
                          const Tensor& a, Tensor* output);
 
+  // INPUTS:
+  //   g (gradients): backpropagated gradients
+  //   a (inputs): inputs that were passed to Relu6Op()
+  // OUTPUT:
+  //   gradients to backprop
+  template <int NDIMS>
+  void Operate(OpKernelContext* context, const Tensor& g, const Tensor& a,
+      Tensor* output) {
+      OperateNoTemplate(context, g, a, output);
+  }
+};
+
 template <typename Device, typename T>
 class Relu1Op : public UnaryElementWiseOp<T, Relu1Op<Device, T>> {
  public:
@@ -131,13 +143,13 @@ class Relu1GradOp : public BinaryElementWiseOp<T, Relu1GradOp<Device, T>> {
 
   // INPUTS:
   //   g (gradients): backpropagated gradients
-  //   a (inputs): inputs that were passed to Relu6Op()
+  //   a (inputs): inputs that were passed to Relu1Op()
   // OUTPUT:
   //   gradients to backprop
   template <int NDIMS>
   void Operate(OpKernelContext* context, const Tensor& g, const Tensor& a,
-               Tensor* output) {
-    OperateNoTemplate(context, g, a, output);
+      Tensor* output) {
+      OperateNoTemplate(context, g, a, output);
   }
 };
 
