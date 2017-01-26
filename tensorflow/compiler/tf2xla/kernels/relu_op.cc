@@ -50,7 +50,24 @@ class Relu6Op : public XlaOpKernel {
   }
 };
 
-class ReluGradOp : public XlaOpKernel {
+class Relu1Op : public XlaOpKernel {
+public:
+    explicit Relu1Op(OpKernelConstruction* ctx) : XlaOpKernel(ctx) {}
+    // Clamp the scalar input between 0 and 1.
+    void Compile(XlaOpKernelContext* ctx) {
+        xla::ComputationBuilder* builder = ctx->builder();
+        auto zero = XlaHelpers::Zero(builder, input_type(0));
+        auto one = XlaHelpers::IntegerLiteral(builder, input_type(0), 1);
+        ctx->SetOutput(0, builder->Clamp(zero, ctx->Input(0), one));
+    }
+};
+
+// A subclass of a XlaBinaryMapOp must build the lambda computation
+// that describes the (scalar,scalar)->scalar function to apply to
+// each element of the input. We have to use XlaBinaryMapOp instead of
+// XlaBinaryOp here because XLA Select does not do automatic
+// broadcasting.
+class ReluGradOp : public XlaBinaryMapOp {
  public:
   explicit ReluGradOp(OpKernelConstruction* ctx) : XlaOpKernel(ctx) {}
   // Return the lhs (incoming gradient) if the rhs (input feature) > 0,
@@ -84,10 +101,27 @@ class Relu6GradOp : public XlaOpKernel {
   }
 };
 
-REGISTER_XLA_OP(Name("Relu"), ReluOp);
-REGISTER_XLA_OP(Name("Relu6"), Relu6Op);
-REGISTER_XLA_OP(Name("ReluGrad"), ReluGradOp);
-REGISTER_XLA_OP(Name("Relu6Grad"), Relu6GradOp);
+class Relu1GradOp : public XlaBinaryMapOp {
+public:
+    explicit Relu1GradOp(OpKernelConstruction* ctx) : XlaBinaryMapOp(ctx) {}
+    // Return the lhs (incoming gradient) if the rhs (input feature) > 0,
+    // otherwise return 0.
+    void BuildMapLambda(xla::ComputationBuilder* b,
+        const xla::ComputationDataHandle& gradient,
+        const xla::ComputationDataHandle& feature) override {
+        const auto zero = XlaHelpers::Zero(b, input_type(0));
+        auto one = XlaHelpers::IntegerLiteral(b, input_type(0), 1);
+        b->Select(b->LogicalAnd(b->Lt(feature, one), b->Gt(feature, zero)),
+            gradient, zero);
+    }
+};
+
+REGISTER_XLA_OP("Relu", ReluOp);
+REGISTER_XLA_OP("Relu6", Relu6Op);
+REGISTER_XLA_OP("Relu1", Relu1Op);
+REGISTER_XLA_OP("ReluGrad", ReluGradOp);
+REGISTER_XLA_OP("Relu6Grad", Relu6GradOp);
+REGISTER_XLA_OP("Relu1Grad", Relu1GradOp);
 
 }  // namespace
 }  // namespace tensorflow

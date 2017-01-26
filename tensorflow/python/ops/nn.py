@@ -20,6 +20,7 @@ See the @{$python/nn} guide.
 
 @@relu
 @@relu6
+@@relu1
 @@crelu
 @@elu
 @@softplus

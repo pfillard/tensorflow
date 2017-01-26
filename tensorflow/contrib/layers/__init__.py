@@ -45,6 +45,18 @@ See the @{$python/contrib.layers} guide.
 @@bow_encoder
 @@embed_sequence
 
+Aliases for fully_connected which set a default activation function are
+available: `relu`, `relu6`, `relu1` and `linear`.
+
+`stack` operation is also available. It builds a stack of layers by applying
+a layer repeatedly.
+
+## Regularizers
+
+Regularization can help prevent overfitting. These have the signature
+`fn(weights)`. The loss is typically added to
+`tf.GraphKeys.REGULARIZATION_LOSSES`.
+
 @@apply_regularization
 @@l1_regularizer
 @@l2_regularizer

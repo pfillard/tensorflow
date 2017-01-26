@@ -80,6 +80,18 @@ TEST_F(NNGradTest, Relu6Grad) {
   RunTest(x, x_init_value, y, shape);
 }
 
+TEST_F(NNGradTest, Relu1Grad) {
+    TensorShape shape({ 5, 2 });
+    auto x = Placeholder(scope_, DT_FLOAT, Placeholder::Shape(shape));
+    auto y = Relu1(scope_, x);
+    // Avoid input values where ReLU gradient is not well defined (around zero
+    // and one).
+    Tensor x_init_value = test::AsTensor<float>(
+    { -0.9f, -0.7f, -0.5f, -0.3f, -0.1f, 1.1f, 1.3f, 1.5f, 1.7f, 1.9f },
+    { 5, 2 });
+    RunTest(x, x_init_value, y, shape);
+}
+
 TEST_F(NNGradTest, EluGrad) {
   TensorShape shape({5, 2});
   auto x = Placeholder(scope_, DT_FLOAT, Placeholder::Shape(shape));

@@ -94,6 +94,11 @@ bool FindType(const Graph* graph, const Node* node, bool* signed_input,
     *range_given = true;
     *input_min = 0;
     *input_max = 6;
+  } else if (src_op == "Relu1") {
+      *signed_input = false;
+      *range_given = true;
+      *input_min = 0;
+      *input_max = 1;
   } else if (src_op == "Sigmoid") {
     *signed_input = false;
     *range_given = true;
@@ -610,7 +615,7 @@ Status DoQuantizeTraining(int32 num_bits, const string& quant_op_type,
       // 1. Const/Variable OP: This is quantized as signed tensors with no given
       // range.
       // 2. Activation OP: Set the range accordingly for different types of
-      // activations. Currently we handle {Relu, Relu6, Sigmoid, Tanh}
+      // activations. Currently we handle {Relu, Relu6, Relu1 Sigmoid, Tanh}
       // 3. Identity OP: The quantization parameters depend on its input.
       // 4. Pooling OPs: various pooling ops. Also depends on its input.
       // 5. Reshape OP: Also depends on the first input to this op.
