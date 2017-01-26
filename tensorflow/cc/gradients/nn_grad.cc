@@ -63,6 +63,15 @@ Status Relu6GradHelper(const Scope& scope, const Operation& op,
 }
 REGISTER_GRADIENT_OP("Relu6", Relu6GradHelper);
 
+Status Relu1GradHelper(const Scope& scope, const Operation& op,
+    const std::vector<Output>& grad_inputs,
+    std::vector<Output>* grad_outputs) {
+    auto dx = Relu1Grad(scope, grad_inputs[0], op.input(0));
+    grad_outputs->push_back(dx);
+    return scope.status();
+}
+REGISTER_GRADIENT_OP("Relu1", Relu1GradHelper);
+
 Status EluGradHelper(const Scope& scope, const Operation& op,
                      const std::vector<Output>& grad_inputs,
                      std::vector<Output>* grad_outputs) {

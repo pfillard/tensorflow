@@ -67,6 +67,7 @@ __all__ = ['avg_pool2d',
            'one_hot_encoding',
            'relu',
            'relu6',
+           'relu1',
            'repeat',
            'separable_conv2d',
            'separable_convolution2d',
@@ -2137,6 +2138,7 @@ legacy_relu = functools.partial(legacy_fully_connected, activation_fn=nn.relu)
 legacy_linear = functools.partial(legacy_fully_connected, activation_fn=None)
 relu = functools.partial(fully_connected, activation_fn=nn.relu)
 relu6 = functools.partial(fully_connected, activation_fn=nn.relu6)
+relu1 = functools.partial(fully_connected, activation_fn=nn.relu1)
 linear = functools.partial(fully_connected, activation_fn=None)
 
 # Simple alias.

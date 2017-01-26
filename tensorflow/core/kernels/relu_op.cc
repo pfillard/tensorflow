@@ -42,7 +42,13 @@ typedef Eigen::GpuDevice GPUDevice;
       Relu6Op<CPUDevice, type>);                                      \
   REGISTER_KERNEL_BUILDER(                                            \
       Name("Relu6Grad").Device(DEVICE_CPU).TypeConstraint<type>("T"), \
-      Relu6GradOp<CPUDevice, type>)
+      Relu6GradOp<CPUDevice, type>)                                   \
+  REGISTER_KERNEL_BUILDER(                                            \
+      Name("Relu1").Device(DEVICE_CPU).TypeConstraint<type>("T"),     \
+      Relu1Op<CPUDevice, type>);                                      \
+  REGISTER_KERNEL_BUILDER(                                            \
+      Name("Relu1Grad").Device(DEVICE_CPU).TypeConstraint<type>("T"), \
+      Relu1GradOp<CPUDevice, type>)
 
 TF_CALL_REAL_NUMBER_TYPES(REGISTER_RELU_KERNELS);
 #undef REGISTER_RELU_KERNELS
@@ -90,6 +96,19 @@ namespace functor {
   extern template struct Relu6Grad<GPUDevice, T>;                              \
                                                                                \
   template <>                                                                  \
+  void Relu1<GPUDevice, T>::operator()(                                        \
+      const GPUDevice& d, typename TTypes<T>::ConstTensor features,            \
+      typename TTypes<T>::Tensor activations);                                 \
+  extern template struct Relu1<GPUDevice, T>;                                  \
+                                                                               \
+  template <>                                                                  \
+  void Relu1Grad<GPUDevice, T>::operator()(                                    \
+      const GPUDevice& d, typename TTypes<T>::ConstTensor gradients,           \
+      typename TTypes<T>::ConstTensor features,                                \
+      typename TTypes<T>::Tensor backprops);                                   \
+  extern template struct Relu1Grad<GPUDevice, T>;                              \
+                                                                               \
+  template <>                                                                  \
   void Elu<GPUDevice, T>::operator()(const GPUDevice& d,                       \
                                      typename TTypes<T>::ConstTensor features, \
                                      typename TTypes<T>::Tensor activations);  \
@@ -119,6 +138,12 @@ TF_CALL_GPU_NUMBER_TYPES(DECLARE_GPU_SPEC);
   REGISTER_KERNEL_BUILDER(                                            \
       Name("Relu6Grad").Device(DEVICE_GPU).TypeConstraint<type>("T"), \
       Relu6GradOp<GPUDevice, type>);                                  \
+  REGISTER_KERNEL_BUILDER(                                            \
+      Name("Relu1").Device(DEVICE_GPU).TypeConstraint<type>("T"),     \
+      Relu1Op<GPUDevice, type>);                                      \
+  REGISTER_KERNEL_BUILDER(                                            \
+      Name("Relu1Grad").Device(DEVICE_GPU).TypeConstraint<type>("T"), \
+      Relu1GradOp<GPUDevice, type>);                                  \
   REGISTER_KERNEL_BUILDER(                                            \
       Name("Elu").Device(DEVICE_GPU).TypeConstraint<type>("T"),       \
       EluOp<GPUDevice, type>);                                        \

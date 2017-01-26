@@ -582,7 +582,7 @@ class GraphRewriter(object):
     for i, input_node_name in enumerate(current_node.input):
       quantize_input = False
       if current_node.op in ("MatMul", "Conv2D", "BiasAdd", "MaxPool",
-                             "AvgPool", "Relu", "Relu6",
+                             "AvgPool", "Relu", "Relu6", "Relu1",
                              "BatchNormWithGlobalNormalization"):
         quantize_input = True
       elif current_node.op == "Concat" and i > 0:
@@ -609,7 +609,7 @@ class GraphRewriter(object):
     elif current_node.op == "MaxPool" or current_node.op == "AvgPool":
       self.eightbitize_single_input_tensor_node(current_node,
                                                 self.add_pool_function)
-    elif current_node.op == "Relu" or current_node.op == "Relu6":
+    elif current_node.op == "Relu" or current_node.op == "Relu6" or current_node.op == "Relu1":
       self.eightbitize_single_input_tensor_node(current_node,
                                                 self.add_relu_function)
     elif (current_node.op == "Concat" and

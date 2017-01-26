@@ -1561,6 +1561,30 @@ backprops: The gradients:
   `gradients * (features > 0) * (features < 6)`.
 )doc");
 
+REGISTER_OP("Relu1")
+    .Input("features: T")
+    .Output("activations: T")
+    .Attr("T: realnumbertype")
+    .SetShapeFn(shape_inference::UnchangedShape)
+    .Doc(R"doc(
+Computes rectified linear 1: `min(max(features, 0), 1)`.
+)doc");
+
+REGISTER_OP("Relu1Grad")
+    .Input("gradients: T")
+    .Input("features: T")
+    .Output("backprops: T")
+    .Attr("T: realnumbertype")
+    .SetShapeFn(shape_inference::MergeBothInputsShapeFn)
+    .Doc(R"doc(
+Computes rectified linear 1 gradients for a Relu1 operation.
+
+gradients: The backpropagated gradients to the corresponding Relu1 operation.
+features: The features passed as input to the corresponding Relu1 operation.
+backprops: The gradients:
+  `gradients * (features > 0) * (features < 1)`.
+)doc");
+
 REGISTER_OP("Elu")
     .Input("features: T")
     .Output("activations: T")
@@ -2314,6 +2338,35 @@ REGISTER_OP("QuantizedRelu6")
     })
     .Doc(R"doc(
 Computes Quantized Rectified Linear 6: `min(max(features, 0), 6)`
+
+activations: Has the same output shape as "features".
+min_features: The float value that the lowest quantized value represents.
+max_features: The float value that the highest quantized value represents.
+min_activations: The float value that the lowest quantized value represents.
+max_activations: The float value that the highest quantized value represents.
+
+)doc");
+
+REGISTER_OP("QuantizedRelu1")
+    .Input("features: Tinput")
+    .Input("min_features: float")
+    .Input("max_features: float")
+    .Output("activations: out_type")
+    .Output("min_activations: float")
+    .Output("max_activations: float")
+    .Attr("Tinput: quantizedtype")
+    .Attr("out_type: quantizedtype = DT_QUINT8")
+    .SetShapeFn([](InferenceContext* c) {
+      TF_RETURN_IF_ERROR(shape_inference::UnchangedShape(c));
+      ShapeHandle unused;
+      TF_RETURN_IF_ERROR(c->WithRank(c->input(1), 0, &unused));
+      TF_RETURN_IF_ERROR(c->WithRank(c->input(2), 0, &unused));
+      c->set_output(1, c->Scalar());
+      c->set_output(2, c->Scalar());
+      return Status::OK();
+    })
+    .Doc(R"doc(
+Computes Quantized Rectified Linear 1: `min(max(features, 0), 1)`
 
 activations: Has the same output shape as "features".
 min_features: The float value that the lowest quantized value represents.

@@ -282,6 +282,9 @@ def _EluGradGrad(op, grad):
 def _Relu6Grad(op, grad):
   return gen_nn_ops._relu6_grad(grad, op.inputs[0])
 
+@ops.RegisterGradient("Relu1")
+def _Relu1Grad(op, grad):
+  return gen_nn_ops._relu1_grad(grad, op.inputs[0])
 
 @ops.RegisterGradient("Elu")
 def _EluGrad(op, grad):

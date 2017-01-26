@@ -34,6 +34,8 @@ typedef Eigen::GpuDevice GPUDevice;
   template struct functor::ReluGrad<GPUDevice, T>;  \
   template struct functor::Relu6<GPUDevice, T>;     \
   template struct functor::Relu6Grad<GPUDevice, T>; \
+  template struct functor::Relu1<GPUDevice, T>;     \
+  template struct functor::Relu1Grad<GPUDevice, T>; \
   template struct functor::Elu<GPUDevice, T>;       \
   template struct functor::EluGrad<GPUDevice, T>;
 

@@ -195,6 +195,9 @@ Node* Relu(Graph* g, Node* in);
 // Add a Relu6 node in "g".
 Node* Relu6(Graph* g, Node* in);
 
+// Add a Relu1 node in "g".
+Node* Relu1(Graph* g, Node* in);
+
 // Add a BiasAdd node in "g".
 Node* BiasAdd(Graph* g, Node* value, Node* bias);
 

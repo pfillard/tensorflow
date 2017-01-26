@@ -460,6 +460,15 @@ Node* Relu6(Graph* g, Node* in) {
   return ret;
 }
 
+Node* Relu1(Graph* g, Node* in) {
+    Node* ret;
+    TF_CHECK_OK(NodeBuilder(g->NewName("n"), "Relu1")
+        .Input(in, 0)
+        .Attr("T", DT_FLOAT)
+        .Finalize(g, &ret));
+    return ret;
+}
+
 Node* BiasAdd(Graph* g, Node* value, Node* bias) {
   Node* ret;
   TF_CHECK_OK(NodeBuilder(g->NewName("n"), "BiasAdd")

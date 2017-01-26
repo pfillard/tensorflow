@@ -109,6 +109,26 @@ class Relu6GradOp : public BinaryElementWiseOp<T, Relu6GradOp<Device, T>> {
   void OperateNoTemplate(OpKernelContext* context, const Tensor& g,
                          const Tensor& a, Tensor* output);
 
+template <typename Device, typename T>
+class Relu1Op : public UnaryElementWiseOp<T, Relu1Op<Device, T>> {
+ public:
+  using UnaryElementWiseOp<T, Relu1Op<Device, T>>::UnaryElementWiseOp;
+
+  void Operate(OpKernelContext* context, const Tensor& input, Tensor* output) {
+    functor::Relu1<Device, T> functor;
+    functor(context->eigen_device<Device>(), input.flat<T>(),
+            output->flat<T>());
+  }
+};
+
+template <typename Device, typename T>
+class Relu1GradOp : public BinaryElementWiseOp<T, Relu1GradOp<Device, T>> {
+ public:
+  using BinaryElementWiseOp<T, Relu1GradOp<Device, T>>::BinaryElementWiseOp;
+
+  void OperateNoTemplate(OpKernelContext* context, const Tensor& g,
+                         const Tensor& a, Tensor* output);
+
   // INPUTS:
   //   g (gradients): backpropagated gradients
   //   a (inputs): inputs that were passed to Relu6Op()
@@ -127,6 +147,16 @@ void Relu6GradOp<Device, T>::OperateNoTemplate(OpKernelContext* context,
                                                Tensor* output) {
   if (!ReluHelpers::ValidateSameSize(context, g, a)) return;
   functor::Relu6Grad<Device, T> functor;
+  functor(context->eigen_device<Device>(), g.flat<T>(), a.flat<T>(),
+          output->flat<T>());
+}
+
+template <typename Device, typename T>
+void Relu1GradOp<Device, T>::OperateNoTemplate(OpKernelContext* context,
+                                               const Tensor& g, const Tensor& a,
+                                               Tensor* output) {
+  if (!ReluHelpers::ValidateSameSize(context, g, a)) return;
+  functor::Relu1Grad<Device, T> functor;
   functor(context->eigen_device<Device>(), g.flat<T>(), a.flat<T>(),
           output->flat<T>());
 }

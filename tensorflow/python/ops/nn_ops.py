@@ -1381,6 +1381,20 @@ def relu6(features, name=None):
     features = ops.convert_to_tensor(features, name="features")
     return gen_nn_ops._relu6(features, name=name)
 
+def relu1(features, name=None):
+  """Computes Rectified Linear 1: `min(max(features, 0), 1)`.
+
+  Args:
+    features: A `Tensor` with type `float`, `double`, `int32`, `int64`, `uint8`,
+      `int16`, or `int8`.
+    name: A name for the operation (optional).
+
+  Returns:
+    A `Tensor` with the same type as `features`.
+  """
+  with ops.name_scope(name, "Relu1", [features]) as name:
+    features = ops.convert_to_tensor(features, name="features")
+    return gen_nn_ops._relu1(features, name=name)
 
 def _flatten_outer_dims(logits):
   """Flattens logits' outer dimensions and keep its last dimension."""
